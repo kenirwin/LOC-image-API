@@ -28,6 +28,7 @@ $(document).ready(function () {
         imgUrls.forEach((imgUrl) => {
           displayOrigAndCorrectedGetters(imgUrl);
         });
+        addPagination(data.pages);
       },
       error: function () {
         alert('Failed!');
@@ -43,6 +44,32 @@ $(document).ready(function () {
       return i.image.full;
     });
     return fullUrls;
+  }
+
+  function addPagination(pages) {
+    $('#nav').empty();
+    if (pages.previous) {
+      addPageButton(pages.previous, 'previous');
+    }
+    if (pages.next) {
+      addPageButton(pages.next, 'next');
+    }
+  }
+
+  function addPageButton(url, label) {
+    button = $(
+      '<input type="button" id="' +
+        label +
+        '" data-url="' +
+        url +
+        '&fo=json" value="' +
+        label +
+        '">'
+    ).bind('click', function () {
+      url = $(this).data('url');
+      Search(url);
+    });
+    $('#nav').append(button);
   }
 
   function displayOrigAndCorrectedGetters(imgUrl) {
