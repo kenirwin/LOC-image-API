@@ -83,7 +83,7 @@ $(document).ready(function () {
   function fixUrl(imgUrl) {
     return imgUrl.replace(
       'https://www.loc.gov/pictures/cdn/service/pnp',
-      'http://loc.gov/pictures/lcweb2/service/pnp'
+      'https://loc.gov/pictures/lcweb2/service/pnp'
     );
   }
 });
