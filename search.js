@@ -84,12 +84,13 @@ $(document).ready(function () {
       '<li><img src="' +
       imgUrl +
       '" class="fetch-img img-orig clickable" data-title="' +
-      title +
+      encodeURI(title) +
       '"></li>';
     if (
       !imgUrl.includes('notdigitized') &&
       !imgUrl.includes('500x500_look.png') &&
-      !imgUrl.includes('500x500_TGM.png')
+      !imgUrl.includes('500x500_TGM.png') &&
+      !imgUrl.includes('500x500_grouprecord.png')
     ) {
       $('#links').append(img);
       $('.clickable')
@@ -98,7 +99,7 @@ $(document).ready(function () {
           imgLink = $(this)[0].src;
           title = $(this).data('title');
           console.log(title);
-          $('.modal-title').html(title);
+          $('.modal-title').html(decodeURI(title));
           $('#image-modal-image').attr('src', imgLink);
           $('#image-modal').modal('show');
         });
