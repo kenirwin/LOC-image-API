@@ -65,7 +65,7 @@ $(document).ready(function () {
 
   function addPageButton(url, label) {
     button = $(
-      '<input type="button" id="' +
+      '<input type="button" class="btn btn-warning me-2" id="' +
         label +
         '" data-url="' +
         url +
