@@ -5,6 +5,7 @@ $(document).ready(function () {
     console.log('Q', query);
     url = getQueryUrl(query);
     Search(url);
+    $('.close').click();
   });
 
   function getQueryUrl(query) {
@@ -24,9 +25,12 @@ $(document).ready(function () {
         // console.log(JSON.stringify(data));
         $('.start-hidden').show();
         $('#result').html(JSON.stringify(data, null, 2));
-        imgUrls = GetFullImageUrls(data);
-        imgUrls.forEach((imgUrl) => {
-          displayOrigAndCorrectedGetters(imgUrl);
+        metadata = GetFullImageUrls(data);
+        i = 0;
+        metadata.urls.forEach((imgUrl) => {
+          title = metadata.titles[i];
+          displayImage(imgUrl, title);
+          i++;
         });
         addPagination(data.pages);
       },
@@ -43,7 +47,10 @@ $(document).ready(function () {
     fullUrls = items.map((i) => {
       return i.image.full;
     });
-    return fullUrls;
+    titles = items.map((i) => {
+      return i.title;
+    });
+    return { urls: fullUrls, titles: titles };
   }
 
   function addPagination(pages) {
@@ -72,18 +79,29 @@ $(document).ready(function () {
     $('#nav').append(button);
   }
 
-  function displayOrigAndCorrectedGetters(imgUrl) {
-    orig = '<li><img src="' + imgUrl + '" class="fetch-img img-orig"></li>';
-    fixed =
-      '<li><img src="' + fixUrl(imgUrl) + '" class="fetch-img img-fixed"></li>';
-    pair = '<ul>' + orig + fixed + '</ul>';
-    $('#links').append(pair);
-  }
-
-  function fixUrl(imgUrl) {
-    return imgUrl.replace(
-      'https://www.loc.gov/pictures/cdn/service/pnp',
-      'https://loc.gov/pictures/lcweb2/service/pnp'
-    );
+  function displayImage(imgUrl, title = '') {
+    img =
+      '<li><img src="' +
+      imgUrl +
+      '" class="fetch-img img-orig clickable" data-title="' +
+      title +
+      '"></li>';
+    if (
+      !imgUrl.includes('notdigitized') &&
+      !imgUrl.includes('500x500_look.png') &&
+      !imgUrl.includes('500x500_TGM.png')
+    ) {
+      $('#links').append(img);
+      $('.clickable')
+        .unbind('click')
+        .click(function () {
+          imgLink = $(this)[0].src;
+          title = $(this).data('title');
+          console.log(title);
+          $('.modal-title').html(title);
+          $('#image-modal-image').attr('src', imgLink);
+          $('#image-modal').modal('show');
+        });
+    }
   }
 });
