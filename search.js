@@ -24,12 +24,14 @@ $(document).ready(function () {
         // console.log('success');
         // console.log(JSON.stringify(data));
         $('.start-hidden').show();
+        $('#numResults').html(data.search.hits);
         $('#result').html(JSON.stringify(data, null, 2));
         metadata = GetFullImageUrls(data);
         i = 0;
         metadata.urls.forEach((imgUrl) => {
           title = metadata.titles[i];
-          displayImage(imgUrl, title);
+          creator = metadata.creators[i];
+          displayImage(imgUrl, title, creator);
           i++;
         });
         addPagination(data.pages);
@@ -50,7 +52,10 @@ $(document).ready(function () {
     titles = items.map((i) => {
       return i.title;
     });
-    return { urls: fullUrls, titles: titles };
+    creators = items.map((i) => {
+      return i.creator;
+    });
+    return { urls: fullUrls, titles: titles, creators: creators };
   }
 
   function addPagination(pages) {
@@ -65,7 +70,7 @@ $(document).ready(function () {
 
   function addPageButton(url, label) {
     button = $(
-      '<input type="button" class="btn btn-warning me-2" id="' +
+      '<input type="button" class="btn btn-warning m-2" id="' +
         label +
         '" data-url="' +
         url +
@@ -79,12 +84,14 @@ $(document).ready(function () {
     $('#nav').append(button);
   }
 
-  function displayImage(imgUrl, title = '') {
+  function displayImage(imgUrl, title = '', creator = '') {
     img =
       '<li><img src="' +
       imgUrl +
       '" class="fetch-img img-orig clickable" data-title="' +
       encodeURI(title) +
+      '" data-creator="' +
+      creator +
       '"></li>';
     if (
       !imgUrl.includes('notdigitized') &&
@@ -100,6 +107,13 @@ $(document).ready(function () {
           title = $(this).data('title');
           console.log(title);
           $('.modal-title').html(decodeURI(title));
+          if (creator !== '' && creator !== null) {
+            $('.modal-title').append(
+              '<div id="creator" class="mt-2">Created by: ' +
+                decodeURI(creator) +
+                '</div>'
+            );
+          }
           $('#image-modal-image').attr('src', imgLink);
           $('#image-modal').modal('show');
         });
