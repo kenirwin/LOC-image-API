@@ -9,7 +9,7 @@ $(document).ready(function () {
   });
 
   function getQueryUrl(query) {
-    return (url = 'https://loc.gov/pictures/search/?q=' + query + '&fo=json');
+    return (url = '/search/?q=' + query + '&fo=json');
   }
 
   function Search(url) {
@@ -18,11 +18,9 @@ $(document).ready(function () {
     settings = {
       url: url,
       type: 'GET',
-      crossDomain: true,
-      dataType: 'jsonp',
       success: function (data) {
-        // console.log('success');
-        // console.log(JSON.stringify(data));
+        console.log('success');
+        console.log(JSON.stringify(data));
         $('.start-hidden').show();
         $('#numResults').html(data.search.hits);
         $('#result').html(JSON.stringify(data, null, 2));
@@ -36,8 +34,9 @@ $(document).ready(function () {
         });
         addPagination(data.pages);
       },
-      error: function () {
+      error: function (err) {
         alert('Failed!');
+        console.log('error', err);
       },
     };
 
